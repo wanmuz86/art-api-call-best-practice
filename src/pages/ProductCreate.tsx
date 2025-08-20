@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { api } from '../api';
+import { createProduct } from '../services/product';
 
 const ProductCreate = () => {
 
@@ -20,13 +20,13 @@ const ProductCreate = () => {
         setLoading(true);
         try {
             // Make API call to create product
-            const response = await api.post('/products', {
+            const response = await createProduct({
                 title,
                 price,
                 description,
                 image
             });
-            console.log("Product created successfully:", response.data);
+            console.log("Product created successfully:", response);
         }
         catch (e: any) {
             setError(e.message);

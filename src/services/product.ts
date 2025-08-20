@@ -6,7 +6,7 @@ import { api } from "../api";
 // this is for the form input
 // to transform the form data into product
 export type ProductInput =
-Pick<Product, 'title' | 'description' | 'image' | 'price' | 'category'>;
+Pick<Product, 'title' | 'description' | 'image' | 'price'>;
 
 // Create (POST)
 

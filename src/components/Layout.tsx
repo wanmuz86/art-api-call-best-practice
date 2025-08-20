@@ -9,9 +9,25 @@ const Layout = () => {
       <Link to="/">List</Link>
       <Link to="/products/new">Create</Link>
     </nav>
+    
     <Outlet />
   </div>
   )
 }
 
 export default Layout
+
+/*
+
+<Layout>
+<ErrorBoundary>
+  <Outlet>.   // about, home/ .... 
+</ErrorBoundary>
+
+    <UserLayout>.      // users/1/profile, users/1/settings
+        <ErrorBoundary>
+      <Outlet />
+      </ErrorBoundary>
+    </UserLayout>
+
+*/
