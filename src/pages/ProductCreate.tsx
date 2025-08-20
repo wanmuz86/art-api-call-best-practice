@@ -1,15 +1,34 @@
 import React, { useState } from 'react';
 import { createProduct } from '../services/product';
-
+import { ToastContainer, toast } from 'react-toastify';
 const ProductCreate = () => {
 
-    const [title, setTitle] = useState('');
-    const [price, setPrice] = useState(0);
-    const [description, setDescription] = useState('');
-    const [image, setImage] = useState('');
+    // 1st way - create state for each input
+    // const [title, setTitle] = useState('');
+    // const [price, setPrice] = useState(0);
+    // const [description, setDescription] = useState('');
+    // const [image, setImage] = useState('');
+
+    // 2nd way - create an object to store the input
+
+    const [formData, setFormData] = useState({ title: '', price: 0, description: '', image: '' });
 
     const [error, setError] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+       
+        // object destructing
+       // const name = event.target.name / "title", "price", "description", "image"
+       // const value = event.target.value // formData.title, formData.price... 
+        const { name, value } = event.target;
+
+        // from the previous FormData, I will update the value of [name] // title, price, description, image
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value
+        }));
+    };
 
     const handleFormSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
         // to override the default behaviour of form submission
@@ -20,13 +39,9 @@ const ProductCreate = () => {
         setLoading(true);
         try {
             // Make API call to create product
-            const response = await createProduct({
-                title,
-                price,
-                description,
-                image
-            });
-            console.log("Product created successfully:", response);
+            const response = await createProduct(formData);
+             toast(`Product ${response.title} successfully added`);
+
         }
         catch (e: any) {
             setError(e.message);
@@ -36,13 +51,11 @@ const ProductCreate = () => {
         }
 
         // Reset back the form
-        setTitle('');
-        setPrice(0);
-        setDescription('');
-        setImage('');
+        setFormData({ title: '', price: 0, description: '', image: '' });
     }
   return (
      <div>
+        <ToastContainer />
         <h2>Add new product</h2>
         {
             // conditional rendering topic
@@ -58,19 +71,19 @@ const ProductCreate = () => {
                 <label htmlFor="title">Title:</label>
                 {/* In form, 1st bind the variable to the property value of input
                 implement onChange to update the state with the input value */}
-                <input type="text" id="title" name="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+                <input type="text" id="title" name="title" value={formData.title} onChange={(e) => handleChange(e)} required />
             </div>
             <div>
                 <label htmlFor="price">Price:</label>
-                <input type="number" id="price" name="price" value={price} onChange={(e) => setPrice(Number(e.target.value))} required />
+                <input type="number" id="price" name="price" value={formData.price} onChange={(e) => handleChange(e)} required />
             </div>
             <div>
                 <label htmlFor="description">Description:</label>
-                <textarea id="description" name="description" value={description} onChange={(e) => setDescription(e.target.value)} required></textarea>
+                <textarea id="description" name="description" value={formData.description} onChange={(e) => handleChange(e)} required></textarea>
             </div>
             <div>
                 <label htmlFor="image">Image URL:</label>
-                <input type="text" id="image" name="image" value={image} onChange={(e) => setImage(e.target.value)} required />
+                <input type="text" id="image" name="image" value={formData.image} onChange={(e) => handleChange(e)} required />
             </div>
             <button type="submit">Add Product</button>
         </form>
